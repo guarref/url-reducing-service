@@ -1,0 +1,68 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: url_reducing_server
+    hostname: url_reducing_server
+    ports:
+      - "8080:8080"
+    networks:
+      - url_network
+    environment:
+      STORAGE: postgres
+      DB_DSN: host=postgres user=postgres password=postgres dbname=urls sslmode=disable
+      MIGRATE_FOLDER: /migrations
+      MIGRATE_ENABLE: "true"
+      SERVICE_PORT: "8080"
+      BASE_URL: http://localhost:8080
+      SERVICE_ENV: development
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
+
+  server-memory:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: url_reducing_server_memory
+    hostname: url_reducing_server_memory
+    ports:
+      - "8081:8080"
+    networks:
+      - url_network
+    environment:
+      STORAGE: memory
+      SERVICE_PORT: "8080"
+      BASE_URL: http://localhost:8081
+      SERVICE_ENV: development
+    restart: on-failure
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: url_reducing_postgres
+    hostname: postgres
+    networks:
+      - url_network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: urls
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "urls", "-U", "postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+
+volumes:
+  postgres_data:
+
+networks:
+  url_network:
+    driver: bridge
