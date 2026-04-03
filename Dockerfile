@@ -19,7 +19,7 @@ COPY --from=builder /url-reducing-service /url-reducing-service
 COPY --from=builder /app/migrations /migrations
 
 ENV SERVICE_PORT=8080
-ENV STORAGE=memory
+ENV STORAGE=postgres
 ENV MIGRATE_FOLDER=/migrations
 ENV BASE_URL=http://localhost:8080
 ENV SERVICE_ENV=development

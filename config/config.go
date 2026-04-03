@@ -16,16 +16,16 @@ type ServiceSettings struct {
 	Port        int    `env:"SERVICE_PORT" envDefault:"8080"`
 	Environment string `env:"SERVICE_ENV" envDefault:"development"`
 	BaseURL     string `env:"BASE_URL" envDefault:"http://localhost:8080"`
-	Storage     string `env:"STORAGE" envDefault:"memory"`
+	Storage     string `env:"STORAGE" envDefault:"postgres"`
 }
 
 type PostgresSettings struct {
 	DSN           string `env:"DB_DSN"`
-	Host          string `env:"DB_HOST"`
+	Host          string `env:"DB_HOST" envDefault:"localhost"`
 	Port          string `env:"DB_PORT" envDefault:"5432"`
-	User          string `env:"DB_USER"`
-	Password      string `env:"DB_PASSWORD"`
-	Name          string `env:"DB_NAME"`
+	User          string `env:"DB_USER" envDefault:"postgres"`
+	Password      string `env:"DB_PASSWORD" envDefault:"postgres"`
+	Name          string `env:"DB_NAME" envDefault:"urls"`
 	SSLMode       string `env:"DB_SSLMODE" envDefault:"disable"`
 	MigrateEnable bool   `env:"MIGRATE_ENABLE" envDefault:"true"`
 	MigrateFolder string `env:"MIGRATE_FOLDER" envDefault:"migrations"`

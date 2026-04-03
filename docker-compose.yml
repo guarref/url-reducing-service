@@ -22,23 +22,6 @@ services:
         condition: service_healthy
     restart: on-failure
 
-  server-memory:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: url_reducing_server_memory
-    hostname: url_reducing_server_memory
-    ports:
-      - "8081:8080"
-    networks:
-      - url_network
-    environment:
-      STORAGE: memory
-      SERVICE_PORT: "8080"
-      BASE_URL: http://localhost:8081
-      SERVICE_ENV: development
-    restart: on-failure
-
   postgres:
     image: postgres:16-alpine
     container_name: url_reducing_postgres
